@@ -1,0 +1,47 @@
+<!-- 发布帖子页面 -->
+<view class="page-container">
+  
+  <!-- 顶部栏 -->
+  <view class="top-bar">
+    <view class="top-close" bindtap="close">✕</view>
+    <text class="top-title">发布新帖</text>
+    <view class="top-placeholder"></view>
+  </view>
+
+  <!-- 表单 -->
+  <view class="form-card">
+    <!-- 标题 -->
+    <view class="field-wrap">
+      <text class="field-label">标题</text>
+      <input 
+        class="field-input title-input" 
+        placeholder="输入帖子标题..." 
+        placeholder-style="color:#bbb;"
+        value="{{title}}"
+        bindinput="onTitle"
+        maxlength="100"
+      />
+    </view>
+
+    <!-- 正文 -->
+    <view class="field-wrap">
+      <text class="field-label">正文</text>
+      <textarea 
+        class="field-textarea" 
+        placeholder="分享你的学术见解或校园新鲜事..." 
+        placeholder-style="color:#bbb;"
+        value="{{content}}"
+        bindinput="onContent"
+        auto-height
+        maxlength="5000"
+      />
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-bar">
+    <button class="cancel-btn" bindtap="cancel">取消</button>
+    <button class="publish-btn" bindtap="submit">发布</button>
+  </view>
+
+</view>

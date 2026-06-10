@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver xmlns="https://www.optaplanner.org/xsd/solver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://www.optaplanner.org/xsd/solver https://www.optaplanner.org/xsd/solver/solver.xsd">
+    
+    <!-- 解决方案类 -->
+    <solutionClass>com.wj.aischedule.optaplanner.domain.TimeTable</solutionClass>
+    
+    <!-- 实体类 -->
+    <entityClass>com.wj.aischedule.optaplanner.domain.Lesson</entityClass>
+    
+    <!-- 评分配置 -->
+    <scoreDirectorFactory>
+        <constraintProviderClass>com.wj.aischedule.optaplanner.solver.TimeTableConstraintProvider</constraintProviderClass>
+        <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+    </scoreDirectorFactory>
+    
+    <!-- 终止条件 -->
+    <termination>
+        <!-- 提高到60秒，确保约束更严格时仍能找到优质方案 -->
+        <secondsSpentLimit>60</secondsSpentLimit>
+    </termination>
+    
+    <!-- 构造启发式阶段 -->
+    <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT_DECREASING</constructionHeuristicType>
+    </constructionHeuristic>
+    
+    <!-- 局部搜索阶段 -->
+    <localSearch>
+        <!-- 局部搜索阶段的终止条件 -->
+        <termination>
+            <stepCountLimit>5000</stepCountLimit>
+        </termination>
+        
+        <unionMoveSelector>
+            <changeMoveSelector/>
+            <swapMoveSelector/>
+        </unionMoveSelector>
+        
+        <acceptor>
+            <entityTabuSize>7</entityTabuSize>
+        </acceptor>
+        
+        <forager>
+            <acceptedCountLimit>800</acceptedCountLimit>
+        </forager>
+    </localSearch>
+    
+</solver>

@@ -1,0 +1,53 @@
+<!-- 我的页面 -->
+<view class="page-container">
+
+  <!-- 未登录状态 -->
+  <view class="login-card" wx:if="{{!isLoggedIn}}">
+    <image class="login-avatar-img" src="/images/随机用户.png" mode="aspectFill"></image>
+    <view class="login-info">
+      <text class="login-title">登录账号</text>
+      <text class="login-desc">登录后可查看个人课表与资料</text>
+    </view>
+    <view class="login-form">
+      <view class="login-input-wrap">
+        <image class="login-input-icon-img" src="/images/随机用户.png" mode="aspectFill"></image>
+        <input class="login-input" placeholder="请输入姓名" placeholder-style="color:#bbb;font-size:28rpx;" value="{{loginName}}" bindinput="onLoginName"/>
+      </view>
+      <view class="login-input-wrap">
+        <text class="login-input-icon">🔒</text>
+        <input class="login-input" placeholder="请输入密码" placeholder-style="color:#bbb;font-size:28rpx;" value="{{loginPwd}}" bindinput="onLoginPwd" password/>
+      </view>
+      <button class="login-submit-btn" bindtap="doLogin">登 录</button>
+    </view>
+  </view>
+
+  <!-- 已登录状态 -->
+  <view class="profile-wrap" wx:if="{{isLoggedIn}}">
+    
+    <!-- 头像卡片 -->
+    <view class="profile-header card">
+      <view class="profile-avatar-placeholder">
+        <text>{{userInfo.name ? userInfo.name[0] : '我'}}</text>
+      </view>
+      <text class="profile-name">{{userInfo.name || '未设置'}}</text>
+      <text class="profile-student-id">学号: {{userInfo.studentId || '-'}}</text>
+      <view class="profile-major-badge">{{userInfo.major || '未设置专业'}}</view>
+    </view>
+
+    <!-- 资料 -->
+    <view class="info-card card">
+      <view class="info-row"><text class="info-label">姓名</text><text class="info-value">{{userInfo.name || '-'}}</text></view>
+      <view class="info-row"><text class="info-label">学号</text><text class="info-value">{{userInfo.studentId || '-'}}</text></view>
+      <view class="info-row"><text class="info-label">性别</text><text class="info-value">{{userInfo.gender || '-'}}</text></view>
+      <view class="info-row"><text class="info-label">年级</text><text class="info-value">{{userInfo.grade || '-'}}</text></view>
+      <view class="info-row"><text class="info-label">专业</text><text class="info-value">{{userInfo.major || '-'}}</text></view>
+      <view class="info-row"><text class="info-label">班级</text><text class="info-value">{{userInfo.className || '-'}}</text></view>
+      <view class="info-row"><text class="info-label">电话</text><text class="info-value">{{userInfo.phone || '-'}}</text></view>
+      <view class="info-row"><text class="info-label">邮箱</text><text class="info-value">{{userInfo.email || '-'}}</text></view>
+    </view>
+
+    <!-- 退出登录 -->
+    <button class="logout-btn" bindtap="doLogout">退出登录</button>
+  </view>
+
+</view>

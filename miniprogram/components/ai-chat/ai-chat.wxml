@@ -1,0 +1,48 @@
+<!-- components/ai-chat/ai-chat.wxml -->
+
+<view class="fab" bindtap="open" hidden="{{show}}">
+  <text class="fab-icon">💬</text>
+</view>
+
+<view class="overlay {{show?'on':''}}" bindtap="close">
+  <view class="panel {{show?'on':''}}" catchtap="stop">
+
+    <view class="head">
+      <text class="head-avatar">🤖</text>
+      <view class="head-info">
+        <text class="head-title">AI 智能助手</text>
+        <text class="head-sub">在线</text>
+      </view>
+      <view class="head-close" bindtap="close">✕</view>
+    </view>
+
+    <scroll-view class="msgs" scroll-y scroll-top="{{scrollTop}}" scroll-with-animation>
+      <block wx:for="{{messages}}" wx:key="index">
+        <!-- AI 消息 -->
+        <view class="msg msg-left" wx:if="{{item.role==='ai'}}">
+          <view class="msg-avatar">🤖</view>
+          <view class="ai-bub-wrap">
+            <view class="bub bub-left"><text>{{item.text}}</text></view>
+            <view class="copy-btn" data-text="{{item.text}}" bindtap="copyReply">复制</view>
+          </view>
+        </view>
+        <!-- 用户消息 -->
+        <view class="msg msg-right" wx:else>
+          <view class="msg-avatar msg-avatar-user">{{userInitial}}</view>
+          <view class="bub bub-right"><text>{{item.text}}</text></view>
+        </view>
+      </block>
+      <!-- 加载态 -->
+      <view class="msg msg-left" wx:if="{{loading}}">
+        <view class="msg-avatar">🤖</view>
+        <view class="bub bub-left typing">...</view>
+      </view>
+    </scroll-view>
+
+    <view class="bar">
+      <input class="bar-input" value="{{input}}" bindinput="onInput" bindconfirm="send" confirm-type="send" placeholder="输入问题..."/>
+      <view class="bar-send {{input?'has':''}}" bindtap="send">发送</view>
+    </view>
+
+  </view>
+</view>

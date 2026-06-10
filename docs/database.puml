@@ -1,0 +1,173 @@
+@startuml 智能排课系统数据库ER图
+
+!define table(x) class x << (T,#FFAAAA) >>
+!define primary_key(x) <u><b><color:#B8861B># x</color></b></u>
+!define foreign_key(x) <color:#006400># x</color>
+!define column(x) <color:#333333>x</color>
+
+' ========== 基础数据模块 ==========
+
+table(admin_user) {
+  primary_key(id) : BIGINT <<PK>>
+  column(username) : VARCHAR(255) UNIQUE
+  column(password) : VARCHAR(255)
+  column(created_at) : DATETIME
+  column(updated_at) : DATETIME
+}
+
+table(teacher) {
+  primary_key(id) : BIGINT <<PK>>
+  column(name) : VARCHAR(50)
+  column(title) : VARCHAR(50)
+  column(department) : VARCHAR(50)
+  column(password) : VARCHAR(100)
+  column(is_muted) : BOOLEAN
+  column(created_at) : DATETIME
+  column(updated_at) : DATETIME
+}
+
+table(student) {
+  primary_key(id) : BIGINT <<PK>>
+  column(name) : VARCHAR(255)
+  column(age) : INT
+  column(major) : VARCHAR(255)
+  foreign_key(class_group_id) : BIGINT <<FK>>
+  column(password) : VARCHAR(255)
+  column(email) : VARCHAR(255)
+  column(is_muted) : BOOLEAN
+}
+
+table(class_group) {
+  primary_key(id) : BIGINT <<PK>>
+  column(name) : VARCHAR(255)
+  column(grade) : VARCHAR(255)
+  column(major) : VARCHAR(255)
+  column(student_count) : INT
+}
+
+table(course) {
+  primary_key(id) : BIGINT <<PK>>
+  column(name) : VARCHAR(100)
+  column(code) : VARCHAR(20) UNIQUE
+  column(credit) : DOUBLE
+  foreign_key(teacher_id) : BIGINT <<FK>>
+  column(max_hours) : INT
+  column(total_classes_needed) : INT
+  column(course_type) : VARCHAR(50)
+  column(description) : VARCHAR(500)
+  column(created_at) : DATETIME
+  column(updated_at) : DATETIME
+}
+
+table(classroom) {
+  primary_key(id) : BIGINT <<PK>>
+  column(name) : VARCHAR(50)
+  column(building) : VARCHAR(50)
+  column(capacity) : INT
+  column(type) : VARCHAR(50)
+  column(created_at) : DATETIME
+  column(updated_at) : DATETIME
+}
+
+' ========== 排课核心模块 ==========
+
+table(schedule) {
+  primary_key(id) : BIGINT <<PK>>
+  foreign_key(course_id) : BIGINT <<FK>>
+  foreign_key(class_group_id) : BIGINT <<FK>>
+  foreign_key(classroom_id) : BIGINT <<FK>>
+  foreign_key(teacher_id) : BIGINT <<FK>>
+  column(semester) : VARCHAR(255)
+  column(week_number) : INT
+  column(week_day) : INT
+  column(time_slot) : INT
+  column(duration) : INT
+  column(is_conflict) : BOOLEAN
+  column(conflict_reason) : VARCHAR(255)
+  column(score) : INT
+  column(created_at) : DATETIME
+  column(updated_at) : DATETIME
+}
+
+table(constraint_config) {
+  primary_key(id) : BIGINT <<PK>>
+  column(constraint_key) : VARCHAR(60) UNIQUE
+  column(constraint_name) : VARCHAR(60)
+  column(enabled) : BOOLEAN
+  column(weight) : INT
+  column(description) : VARCHAR(200)
+  column(category) : VARCHAR(20)
+}
+
+' ========== 考试模块 ==========
+
+table(exam) {
+  primary_key(id) : BIGINT <<PK>>
+  foreign_key(course_id) : BIGINT <<FK>>
+  foreign_key(class_group_id) : BIGINT <<FK>>
+  foreign_key(teacher_id) : BIGINT <<FK>>
+  column(exam_date) : DATE
+  column(start_time) : VARCHAR(10)
+  column(end_time) : VARCHAR(10)
+  column(location) : VARCHAR(100)
+  column(created_at) : DATETIME
+  column(updated_at) : DATETIME
+}
+
+table(exam_grade) {
+  primary_key(id) : BIGINT <<PK>>
+  foreign_key(exam_id) : BIGINT <<FK>>
+  foreign_key(student_id) : BIGINT <<FK>>
+  column(score) : DECIMAL(5,2)
+  column(created_at) : DATETIME
+  column(updated_at) : DATETIME
+  == UNIQUE(exam_id, student_id) ==
+}
+
+' ========== 消息 & 论坛模块 ==========
+
+table(message) {
+  primary_key(id) : BIGINT <<PK>>
+  column(title) : VARCHAR(200)
+  column(content) : LONGTEXT
+  column(type) : VARCHAR(50)
+  column(target) : VARCHAR(20)
+  column(publisher_id) : BIGINT
+  column(publisher_name) : VARCHAR(100)
+  column(views) : INT
+  column(likes) : INT
+  column(status) : VARCHAR(20)
+  column(publish_time) : DATETIME
+  column(created_at) : DATETIME
+  column(updated_at) : DATETIME
+}
+
+table(forum_post) {
+  primary_key(id) : BIGINT <<PK>>
+  column(title) : VARCHAR(255)
+  column(content) : TEXT
+  column(author_id) : BIGINT
+  column(author_name) : VARCHAR(255)
+  column(author_role) : VARCHAR(255)
+  column(like_count) : INT
+  column(dislike_count) : INT
+  column(is_pinned) : BOOLEAN
+  column(created_at) : DATETIME
+  column(updated_at) : DATETIME
+}
+
+' ========== 外键关系 ==========
+
+student }o--|| class_group : "class_group_id → id"
+course }o--|| teacher : "teacher_id → id"
+schedule }o--|| course : "course_id → id"
+schedule }o--|| class_group : "class_group_id → id"
+schedule }o--|| classroom : "classroom_id → id"
+schedule }o--|| teacher : "teacher_id → id"
+exam }o--|| course : "course_id → id"
+exam }o--|| class_group : "class_group_id → id"
+exam }o--|| teacher : "teacher_id → id"
+exam_grade }o--|| exam : "exam_id → id"
+exam_grade }o--|| student : "student_id → id"
+
+@enduml

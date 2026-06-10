@@ -1,0 +1,121 @@
+<!-- 课表页面 -->
+<view class="page-container">
+  
+  <!-- 周次选择器 + 考试入口 -->
+  <view class="week-selector">
+    <view class="week-center">
+      <view class="week-arrow" bindtap="prevWeek">‹</view>
+      <view class="week-text">第{{currentWeek}}周</view>
+      <view class="week-arrow" bindtap="nextWeek">›</view>
+    </view>
+    <view class="exam-entry" bindtap="goExam">📝 考试</view>
+  </view>
+
+  <!-- 课表网格容器 - 周视图 -->
+  <view class="schedule-container" wx:if="{{viewMode === 'week'}}">
+    <view class="empty-schedule-overlay" wx:if="{{!isLoggedIn}}">
+      <view class="empty-schedule-text">
+        <text class="empty-schedule-icon">📋</text>
+        <text class="empty-schedule-title">暂无课表数据</text>
+        <text class="empty-schedule-desc">登录后可查看您的课程安排</text>
+        <view class="empty-schedule-btn" bindtap="goToLogin">去登录</view>
+      </view>
+    </view>
+    
+    <view class="schedule-grid">
+      <view class="grid-header">
+        <view class="time-col-header"></view>
+        <view class="day-col {{item.isToday ? 'today-col' : ''}}" wx:for="{{weekDays}}" wx:key="index">
+          <text class="day-name">{{item.name}}</text>
+        </view>
+      </view>
+      <view class="grid-row" wx:for="{{timeSlots}}" wx:for-item="slot" wx:key="id">
+        <view class="time-col">
+          <text class="slot-label">{{slot.label}}</text>
+          <text class="slot-time-top">{{slot.start}}</text>
+          <text class="slot-time-bot">{{slot.end}}</text>
+        </view>
+        <view 
+          class="cell {{item.hasCourse ? 'has-course' : ''}}"
+          wx:for="{{slot.cells}}" 
+          wx:for-item="item" 
+          wx:key="dayIndex"
+          data-course="{{item.course}}"
+          bindtap="{{item.hasCourse ? 'showCourseDetail' : ''}}"
+        >
+          <block wx:if="{{item.hasCourse}}">
+            <text class="course-name">{{item.course.name}}</text>
+            <text class="course-location">{{item.course.location}}</text>
+          </block>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 切换视图按钮 -->
+  <view class="view-toggle">
+    <view class="toggle-btn {{viewMode === 'week' ? 'active' : ''}}" bindtap="switchView" data-mode="week">周视图</view>
+    <view class="toggle-btn {{viewMode === 'list' ? 'active' : ''}}" bindtap="switchView" data-mode="list">列表</view>
+  </view>
+
+  <!-- 列表视图 -->
+  <view class="list-view" wx:if="{{viewMode === 'list'}}">
+    <view class="list-day" wx:for="{{weekDays}}" wx:key="index">
+      <view class="list-day-title">{{item.name}} {{item.date}}</view>
+      <view class="list-item card" wx:for="{{item.courses}}" wx:for-item="c" wx:key="id" bindtap="showCourseDetail" data-course="{{c}}">
+        <view class="list-item-left">
+          <text class="list-item-time">{{c.timeSlotLabel}}</text>
+        </view>
+        <view class="list-item-right">
+          <text class="list-item-name">{{c.name}}</text>
+          <text class="list-item-location">📍 {{c.location}}  |  👨‍🏫 {{c.teacher}}</text>
+        </view>
+      </view>
+      <view class="list-empty" wx:if="{{item.courses.length === 0}}">当天暂无课程</view>
+    </view>
+  </view>
+
+</view>
+
+<!-- 登录提示弹窗 -->
+<view class="modal-mask {{showLoginTip ? 'show' : ''}}" catchtap="closeLoginTip">
+  <view class="login-tip-card" catchtap="noop">
+    <text class="login-tip-icon">🔐</text>
+    <text class="login-tip-title">欢迎使用AI智能排课</text>
+    <text class="login-tip-desc">登录后即可查看您的专属课表、参与论坛讨论</text>
+    <view class="login-tip-actions">
+      <view class="login-tip-cancel" bindtap="closeLoginTip">稍后再说</view>
+      <view class="login-tip-confirm" bindtap="goToLogin">立即登录</view>
+    </view>
+  </view>
+</view>
+
+<!-- 课程详情弹窗 -->
+<view class="modal-mask {{showModal ? 'show' : ''}}" bindtap="closeModal">
+  <view class="modal-content" catchtap="noop">
+    <view class="modal-header">
+      <text class="modal-title">{{selectedCourse.name}}</text>
+      <view class="modal-credits">{{selectedCourse.credit}}学分</view>
+    </view>
+    <view class="modal-body">
+      <view class="modal-row">
+        <text class="modal-icon">👨‍🏫</text>
+        <view class="modal-info"><text class="modal-label">授课教师</text><text class="modal-value">{{selectedCourse.teacher}}</text></view>
+      </view>
+      <view class="modal-row">
+        <text class="modal-icon">📍</text>
+        <view class="modal-info"><text class="modal-label">上课地点</text><text class="modal-value">{{selectedCourse.location}}</text></view>
+      </view>
+      <view class="modal-row">
+        <text class="modal-icon">📅</text>
+        <view class="modal-info"><text class="modal-label">上课时间</text><text class="modal-value">{{selectedCourse.schedule}}</text></view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="btn-outline" bindtap="closeModal">关闭</button>
+      <button class="btn-primary">课程详情</button>
+    </view>
+  </view>
+</view>
+
+<ai-chat />

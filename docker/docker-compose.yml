@@ -1,0 +1,105 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: aischedule-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: aischedule
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-p123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./aischedule
+    container_name: aischedule-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: 8084
+      DB_URL: jdbc:mysql://mysql:3306/aischedule?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+      DB_USERNAME: root
+      DB_PASSWORD: 123456
+      APP_JWT_SECRET: AISCHEDULE_JWT_SECRET_KEY_2026_WJ_PROJECT_SECURE_32
+      APP_JWT_EXPIRATION_MINUTES: 720
+      JPA_DDL_AUTO: update
+      JPA_SHOW_SQL: "false"
+    ports:
+      - "8084:8084"
+
+  frontend:
+    build:
+      context: ./aischedule-frontend
+    container_name: aischedule-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  mysql-data:
+
+
+  这是一个 **Docker Compose** 配置文件（通常命名为 `docker-compose.yml`）。
+
+简单来说，它就像是一份“全家桶套餐说明书”，告诉 Docker 如何一键启动并配置你的整套程序。这份文件描述了一个包含 **数据库、后端、前端** 三个部分的完整 Web 系统。
+
+以下是各部分的详细拆解：
+
+# ---
+
+# ### 1. 整体架构
+# 该项目名为 **aischedule**，由三个相互协作的“容器”（Container）组成：
+# * **MySQL**: 负责存数据的仓库。
+# * **Backend**: 负责处理业务逻辑的后端程序（可能是 Java/Spring Boot）。
+# * **Frontend**: 用户看到的网页界面。
+
+# ---
+
+# ### 2. 各个服务的具体含义
+
+# #### **MySQL (数据库)**
+# * **镜像**: 使用官方 MySQL 8.4 版本。
+# * **设置**: 设置了数据库密码为 `123456`，创建了一个名为 `aischedule` 的数据库，并将时区设为上海。
+# * **健康检查 (Healthcheck)**: 它会每 10 秒自我检查一次，确认数据库是否真的跑起来了，而不只是容器开启了。
+# * **持久化 (Volumes)**: 将数据存在名为 `mysql-data` 的卷里。这意味着**即使你删掉容器，数据也不会丢失**。
+
+# #### **Backend (后端)**
+# * **构建 (Build)**: 它不是从网上下载现成的，而是根据 `./aischedule` 文件夹里的代码现场“打包”出来的。
+# * **依赖 (Depends_on)**: 这是一个关键点。它规定**必须等 MySQL 彻底启动且通过健康检查后**，后端才开始启动。
+# * **环境变量**: 这里配置了数据库连接地址、端口（8084）、JWT 登录加密密钥等信息。
+# * **端口**: 将容器内的 8084 端口映射到你电脑的 **8084** 端口。
+
+# #### **Frontend (前端)**
+# * **构建**: 根据 `./aischedule-frontend` 文件夹里的代码打包。
+# * **端口**: 将容器内的 80 端口（网页标准端口）映射到你电脑的 **8080** 端口。也就是说，运行后你在浏览器输入 `localhost:8080` 就能看到界面。
+
+# ---
+
+# ### 3. 这个文件怎么用？
+
+# 如果你安装了 Docker，只需要在文件所在目录下打开终端，输入：
+
+# ```bash
+# docker-compose up -d
+# ```
+
+# **它会自动帮你完成以下操作：**
+# 1. 下载 MySQL 镜像。
+# 2. 编译并打包你的前后端代码。
+# 3. 按照顺序（先数据库 -> 再后端 -> 最后前端）把整个系统跑起来。
+# 4. 建立它们之间的内部网络，让后端能通过 `mysql:3306` 访问到数据库。
+
+# ---

@@ -1,0 +1,111 @@
+/** 我的页面样式 **/
+page { height: 100vh; overflow: hidden; }
+.page-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* ====== 登录卡片 ====== */
+.login-card {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 60rpx 40rpx; margin: 80rpx 16rpx 0;
+  background: #fff; border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(74,144,217,0.08);
+}
+.login-avatar-img {
+  width: 120rpx; height: 120rpx; border-radius: 50%;
+  margin-bottom: 24rpx;
+  border: 4rpx solid #d2e4ff;
+}
+.login-input-icon-img {
+  width: 44rpx; height: 44rpx; border-radius: 50%;
+  margin-right: 16rpx; flex-shrink: 0;
+}
+.login-info { text-align: center; margin-bottom: 48rpx; }
+.login-title { font-size: 36rpx; font-weight: 700; color: #333; display: block; }
+.login-desc { font-size: 26rpx; color: #999; margin-top: 8rpx; }
+.login-form { width: 100%; display: flex; flex-direction: column; gap: 24rpx; }
+.login-input-wrap {
+  display: flex; align-items: center; background: #f2f4f7;
+  border-radius: 16rpx; padding: 0 24rpx; height: 96rpx;
+}
+.login-input-icon { font-size: 36rpx; margin-right: 16rpx; }
+.login-input { flex: 1; height: 96rpx; font-size: 28rpx; }
+.login-submit-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 96rpx; box-sizing: border-box; padding: 0;
+  background: #4A90D9; color: #fff; border-radius: 16rpx;
+  font-size: 32rpx; font-weight: 700; border: none;
+}
+.login-submit-btn:active { opacity: 0.85; }
+
+/* ====== 已登录 ====== */
+.profile-wrap {
+  flex: 1;
+  display: flex; flex-direction: column;
+  padding: 20rpx 16rpx;
+  overflow: hidden;
+}
+
+/* 头像卡片 */
+.profile-header {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 30rpx 24rpx 20rpx; margin-bottom: 12rpx;
+  text-align: center; flex-shrink: 0;
+}
+.profile-avatar-placeholder {
+  width: 100rpx; height: 100rpx; border-radius: 50%;
+  background: linear-gradient(135deg, #4A90D9, #357ABD);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44rpx; color: #fff; font-weight: 700;
+  margin-bottom: 14rpx;
+}
+.profile-name { font-size: 32rpx; font-weight: 700; color: #191c1e; }
+.profile-student-id { font-size: 22rpx; color: #999; margin-top: 4rpx; }
+.profile-major-badge {
+  margin-top: 10rpx; display: inline-block;
+  background: #e8f0fa; color: #4A90D9;
+  padding: 6rpx 20rpx; border-radius: 24rpx;
+  font-size: 22rpx; font-weight: 600;
+}
+
+/* 资料卡片 */
+.info-card {
+  flex: 1;
+  padding: 0; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16rpx 24rpx; border-bottom: 1rpx solid #f5f6f8;
+  flex: 1;
+}
+.info-row:last-child { border-bottom: none; }
+.info-label { font-size: 24rpx; color: #999; }
+.info-value { font-size: 26rpx; color: #333; }
+
+/* 退出登录 */
+.logout-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 80rpx; box-sizing: border-box; padding: 0;
+  margin-top: 12rpx; flex-shrink: 0;
+  background: #fff; color: #e74c3c;
+  border: 2rpx solid #fdd; border-radius: 16rpx;
+  font-size: 28rpx; font-weight: 600;
+}
+.logout-btn:active { opacity: 0.8; }
+
+/* AI 助手入口按钮 */
+.ai-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 80rpx; box-sizing: border-box; padding: 0;
+  margin-top: 12rpx; flex-shrink: 0;
+  background: linear-gradient(135deg, #4A90D9, #357ABD);
+  color: #fff;
+  border: none; border-radius: 16rpx;
+  font-size: 28rpx; font-weight: 700;
+  box-shadow: 0 4rpx 16rpx rgba(74,144,217,0.3);
+}
+.ai-btn:active { opacity: 0.85; }

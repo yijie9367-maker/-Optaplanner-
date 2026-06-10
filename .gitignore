@@ -1,0 +1,39 @@
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+
+# Java
+target/
+*.class
+*.jar
+*.war
+*.log
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Python
+.venv/
+__pycache__/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Env files (keep templates)
+.env.local
+.env.*.local
+
+# Temp files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Docker
+docker-compose.override.yml

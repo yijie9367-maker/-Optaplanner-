@@ -1,0 +1,345 @@
+# 学生端小程序 - 接口文档
+
+## 基础信息
+
+- **Base URL**: `http://localhost:8084`
+- **数据格式**: JSON
+- **认证方式**: 登录后返回 JWT token，后续请求在 Header 中携带 `Authorization: Bearer <token>`
+
+---
+
+## 统一响应格式
+
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": { ... }
+}
+```
+
+| code | 说明 |
+|------|------|
+| 200  | 成功 |
+| 400  | 参数错误 |
+| 401  | 未登录/token过期 |
+| 500  | 服务器错误 |
+
+---
+
+## 一、登录认证
+
+### POST /student/login — 学生登录
+
+```
+POST http://localhost:8084/student/login
+Content-Type: application/json
+
+{
+  "name": "张三",
+  "password": "123456"
+}
+```
+
+**成功响应**:
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiJ9...",
+    "student": {
+      "id": 1,
+      "name": "张三",
+      "studentId": "20250101001",
+      "major": "计算机科学与技术",
+      "classGroupId": 1,
+      "email": "zhangsan@qq.com"
+    }
+  }
+}
+```
+
+---
+
+## 二、课表模块
+
+### GET /schedule/listByClassGroupId — 获取班级课表
+
+```
+GET http://localhost:8084/schedule/listByClassGroupId?classGroupId=1
+Authorization: Bearer <token>
+```
+
+**成功响应**:
+```json
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 1,
+      "courseId": 1,
+      "courseName": "高等数学",
+      "teacherName": "张伟",
+      "classGroupId": 1,
+      "className": "计科2301",
+      "classroomId": 1,
+      "classroomName": "教A301",
+      "weekDay": 1,
+      "timeSlot": 1,
+      "weekNumber": 1,
+      "semester": "2025-2026-2"
+    }
+  ]
+}
+```
+
+**字段说明**:
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| weekDay | int | 星期几（1=周一 ~ 7=周日） |
+| timeSlot | int | 节次编号（1=第1-2节, 2=第3-4节, 3=第5-6节, 4=第7-8节, 5=第9-10节） |
+| weekNumber | int | 上课周次 |
+| courseName | string | 课程名称 |
+| classroomName | string | 教室名称 |
+| teacherName | string | 授课教师 |
+
+---
+
+## 三、论坛模块
+
+### GET /forum/posts — 帖子列表（分页+搜索）
+
+```
+GET http://localhost:8084/forum/posts?keyword=高数&sort=newest&page=0&size=10
+```
+
+**参数**:
+| 参数 | 必填 | 默认值 | 说明 |
+|------|------|--------|------|
+| keyword | 否 | - | 搜索关键词 |
+| sort | 否 | newest | newest=最新, hot=最热 |
+| page | 否 | 0 | 页码（从0开始） |
+| size | 否 | 10 | 每页条数 |
+
+**成功响应**:
+```json
+{
+  "code": 200,
+  "data": {
+    "content": [
+      {
+        "id": 1,
+        "title": "关于高等数学选课的建议",
+        "content": "张伟老师怎么样...",
+        "authorName": "张三",
+        "authorRole": "student",
+        "createdAt": "2025-05-08 10:30",
+        "pinned": true,
+        "upvotes": 23,
+        "downvotes": 0,
+        "commentCount": 8,
+        "userVoted": "upvote"
+      }
+    ],
+    "totalElements": 50,
+    "totalPages": 5,
+    "number": 0
+  }
+}
+```
+
+### GET /forum/posts/{id} — 帖子详情（含评论）
+
+```
+GET http://localhost:8084/forum/posts/1
+```
+
+**成功响应**:
+```json
+{
+  "code": 200,
+  "data": {
+    "id": 1,
+    "title": "关于高等数学选课的建议",
+    "content": "请问各位学长学姐...",
+    "authorName": "张三",
+    "authorRole": "student",
+    "createdAt": "2025-05-08 10:30",
+    "pinned": true,
+    "upvotes": 23,
+    "commentCount": 3,
+    "comments": [
+      {
+        "id": 1,
+        "authorName": "李四",
+        "authorRole": "student",
+        "content": "推荐选他的课！",
+        "createdAt": "2025-05-08 11:00"
+      }
+    ]
+  }
+}
+```
+
+### POST /forum/posts — 发帖
+
+```
+POST http://localhost:8084/forum/posts
+Authorization: Bearer <token>
+
+{
+  "title": "数据结构实验报告模板分享",
+  "content": "分享一份实验报告模板...",
+  "authorId": 1,
+  "authorName": "张三",
+  "authorRole": "student"
+}
+```
+
+### POST /forum/posts/{id}/vote — 点赞/取消点赞
+
+```
+POST http://localhost:8084/forum/posts/1/vote
+Authorization: Bearer <token>
+
+{
+  "userId": 1,
+  "userRole": "student",
+  "voteType": "upvote"
+}
+```
+
+`voteType` 可选值: `upvote`（点赞）/ `downvote`（踩）/ `cancel`（取消）
+
+### POST /forum/posts/{id}/comments — 发表评论
+
+```
+POST http://localhost:8084/forum/posts/1/comments
+Authorization: Bearer <token>
+
+{
+  "authorId": 1,
+  "authorName": "张三",
+  "authorRole": "student",
+  "content": "谢谢分享！"
+}
+```
+
+### DELETE /forum/posts/{id} — 删除自己的帖子
+
+```
+DELETE http://localhost:8084/forum/posts/1
+Authorization: Bearer <token>
+```
+
+---
+
+## 四、个人资料模块
+
+### GET /student/{id} — 获取学生信息
+
+```
+GET http://localhost:8084/student/1
+Authorization: Bearer <token>
+```
+
+**成功响应**:
+```json
+{
+  "code": 200,
+  "data": {
+    "id": 1,
+    "name": "张三",
+    "studentId": "20250101001",
+    "age": 21,
+    "major": "计算机科学与技术",
+    "classGroupId": 1,
+    "email": "zhangsan@qq.com"
+  }
+}
+```
+
+### PUT /student/update — 更新个人资料
+
+```
+PUT http://localhost:8084/student/update
+Authorization: Bearer <token>
+
+{
+  "id": 1,
+  "name": "张三",
+  "studentId": "20250101001",
+  "major": "计算机科学与技术",
+  "email": "zhangsan@newmail.com",
+  "classGroupId": 1
+}
+```
+
+---
+
+## 五、考试模块
+
+### GET /exam/listByClassGroupId — 获取班级考试安排
+
+```
+GET http://localhost:8084/exam/listByClassGroupId?classGroupId=1
+Authorization: Bearer <token>
+```
+
+**成功响应**:
+```json
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 1,
+      "courseId": 83,
+      "courseName": "云计算基础",
+      "classGroupId": 2,
+      "className": "软工2201班",
+      "teacherId": 2,
+      "teacherName": "李老师",
+      "examDate": "2026-04-04",
+      "startTime": "08:30",
+      "endTime": "09:30",
+      "location": "一号教学楼·A101",
+      "myScore": null
+    }
+  ]
+}
+```
+
+**字段说明**:
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| examDate | date | 考试日期 |
+| startTime | string | 开始时间 (HH:mm) |
+| endTime | string | 结束时间 (HH:mm) |
+| courseName | string | 课程名称 |
+| location | string | 考试地点 |
+| teacherName | string | 授课教师 |
+| className | string | 班级名称 |
+| myScore | number | 学生本人成绩（可为 null） |
+
+---
+
+## 接口汇总（按 Tab 分组）
+
+| Tab | 接口 | 方法 | 说明 |
+|-----|------|------|------|
+| 🔐 登录 | `/student/login` | POST | 学生登录 |
+| 📅 课表 | `/schedule/listByClassGroupId` | GET | 获取班级课表 |
+| 📝 考试 | `/exam/listByClassGroupId` | GET | 获取班级考试安排 |
+| 💬 论坛 | `/forum/posts` | GET | 帖子列表（搜索+分页） |
+| | `/forum/posts/{id}` | GET | 帖子详情+评论 |
+| | `/forum/posts` | POST | 发帖 |
+| | `/forum/posts/{id}/vote` | POST | 点赞 |
+| | `/forum/posts/{id}/comments` | POST | 发评论 |
+| | `/forum/posts/{id}` | DELETE | 删帖 |
+| 👤 我的 | `/student/{id}` | GET | 获取学生信息 |
+| | `/student/update` | PUT | 更新个人资料 |
+
+---
+
+> 共 10 个接口，覆盖小程序全部功能。

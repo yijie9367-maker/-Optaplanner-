@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "ai-chat": "/components/ai-chat/ai-chat"
+  },
+  "navigationBarTitleText": "我的课表"
+}

@@ -1,0 +1,69 @@
+<!-- 帖子详情页 -->
+<view class="page-container">
+  
+  <!-- 帖子内容 -->
+  <view class="detail-card card" wx:if="{{post}}">
+    <view class="detail-header">
+      <view class="detail-avatar">{{post.authorName ? post.authorName[0] : '?'}}</view>
+      <view class="detail-author-info">
+        <text class="detail-author">{{post.authorName}}</text>
+        <text class="detail-time">{{post.createdAt}}</text>
+      </view>
+      <view class="detail-pin" wx:if="{{post.pinned}}">📌 置顶</view>
+    </view>
+    
+    <view class="detail-title">{{post.title}}</view>
+    <view class="detail-content">{{post.content}}</view>
+    
+    <view class="detail-actions">
+      <view class="action-item {{post.userVoted ? 'voted' : ''}}" bindtap="toggleVote">
+        <text class="action-icon">❤️</text>
+        <text class="action-count">{{post.upvotes || 0}}</text>
+      </view>
+      <view class="action-item">
+        <text class="action-icon">💬</text>
+        <text class="action-count">{{comments.length}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 评论区 -->
+  <view class="comments-section">
+    <view class="comments-title">评论 ({{comments.length}})</view>
+    
+    <view class="comment-item" wx:for="{{comments}}" wx:key="id">
+      <view class="comment-avatar">{{item.authorName ? item.authorName[0] : '?'}}</view>
+      <view class="comment-body">
+        <view class="comment-top">
+          <text class="comment-author">{{item.authorName}}</text>
+          <text class="comment-time">{{item.createdAt}}</text>
+        </view>
+        <text class="comment-content">{{item.content}}</text>
+      </view>
+    </view>
+
+    <view class="comments-empty" wx:if="{{comments.length === 0}}">
+      暂无评论，快来发表第一条评论吧~
+    </view>
+  </view>
+
+  <!-- 底部评论输入栏 -->
+  <view class="comment-bar" wx:if="{{isLoggedIn}}">
+    <input 
+      class="comment-input" 
+      placeholder="写下你的评论..." 
+      value="{{commentText}}"
+      bindinput="onCommentInput"
+      confirm-type="send"
+      bindconfirm="submitComment"
+    />
+    <view class="comment-send" bindtap="submitComment">发送</view>
+  </view>
+
+  <!-- 未登录时显示登录提示 -->
+  <view class="comment-bar comment-bar-disabled" wx:if="{{!isLoggedIn}}">
+    <view class="comment-input disabled" bindtap="showLoginTip">登录后才能评论...</view>
+    <view class="comment-send disabled">发送</view>
+  </view>
+
+</view>

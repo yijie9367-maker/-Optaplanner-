@@ -1,0 +1,324 @@
+/**
+ * 统一的表格和表单样式库
+ * 消除各组件中重复的CSS代码
+ */
+
+:root {
+  --table-container-padding: 20px;
+  --table-container-max-width: 1400px;
+  --card-header-margin-bottom: 20px;
+  --card-header-padding-bottom: 10px;
+  --border-color: #e4e7ed;
+  --font-color: #303133;
+  --header-bg: #f5f7fa;
+  --hover-bg: #f5f7fa;
+  --table-font-size: 14px;
+}
+
+/* ==================== 表格容器和头部 ==================== */
+.table-container {
+  padding: var(--table-container-padding);
+  max-width: var(--table-container-max-width);
+  margin: 0 auto;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--card-header-margin-bottom);
+  padding-bottom: var(--card-header-padding-bottom);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--font-color);
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ==================== 搜索和过滤区域 ==================== */
+.filter-section {
+  margin-bottom: var(--card-header-margin-bottom);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-item label {
+  text-align: right;
+  min-width: 80px;
+}
+
+.search-input {
+  min-width: 200px;
+}
+
+/* ==================== 表格样式 ==================== */
+:deep(.el-table) {
+  font-size: var(--table-font-size);
+}
+
+:deep(.el-table th) {
+  background-color: var(--header-bg);
+  color: var(--font-color);
+  font-weight: 500;
+}
+
+:deep(.el-table tr:hover) {
+  background-color: var(--hover-bg);
+}
+
+:deep(.el-table td) {
+  padding: 12px 0;
+}
+
+:deep(.el-table .cell) {
+  padding: 0 12px;
+}
+
+/* ==================== 表格单元格状态 ==================== */
+:deep(.el-table .warning-row) {
+  background-color: #fdf6ec !important;
+}
+
+:deep(.el-table .success-row) {
+  background-color: #f0f9ff !important;
+}
+
+:deep(.el-table .danger-row) {
+  background-color: #fef0f0 !important;
+}
+
+/* ==================== 分页样式 ==================== */
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+:deep(.el-pagination) {
+  text-align: right;
+}
+
+/* ==================== 对话框样式 ==================== */
+:deep(.el-dialog__header) {
+  padding: 20px 20px 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+:deep(.el-dialog__body) {
+  padding: 20px;
+}
+
+:deep(.el-dialog__footer) {
+  border-top: 1px solid var(--border-color);
+  padding: 10px 20px 20px;
+}
+
+/* ==================== 表单样式 ==================== */
+:deep(.el-form) {
+  padding: 10px 0;
+}
+
+:deep(.el-form-item) {
+  margin-bottom: 18px;
+}
+
+:deep(.el-form-item__label) {
+  font-weight: 500;
+  color: var(--font-color);
+}
+
+:deep(.el-form-item__error) {
+  font-size: 12px;
+  color: #f56c6c;
+}
+
+:deep(.el-input),
+:deep(.el-select),
+:deep(.el-date-picker) {
+  width: 100%;
+}
+
+/* ==================== 按钮样式 ==================== */
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+:deep(.el-button) {
+  min-width: 80px;
+}
+
+:deep(.el-button--text) {
+  padding: 0;
+}
+
+/* ==================== 标签和徽章 ==================== */
+:deep(.el-tag) {
+  margin-right: 5px;
+}
+
+.status-tag {
+  padding: 4px 12px;
+  border-radius: 2px;
+  font-size: 12px;
+}
+
+/* ==================== 加载和空状态 ==================== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #909399;
+  font-size: 14px;
+}
+
+.empty-state svg {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+  opacity: 0.5;
+}
+
+/* ==================== 操作列样式 ==================== */
+.action-cell {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+:deep(.action-cell .el-button) {
+  padding: 5px 10px;
+  height: auto;
+  min-width: auto;
+}
+
+/* ==================== 响应式设计 ==================== */
+@media (max-width: 768px) {
+  .table-container {
+    padding: 10px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .filter-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-item {
+    flex-direction: column;
+  }
+
+  .filter-item label {
+    min-width: auto;
+  }
+
+  .search-input {
+    min-width: 100%;
+  }
+
+  :deep(.el-table) {
+    font-size: 12px;
+  }
+
+  .pagination-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  :deep(.el-pagination) {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+/* ==================== 深色主题支持（未来扩展） ==================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --font-color: #e4e7ed;
+    --header-bg: #1f2937;
+    --border-color: #374151;
+  }
+}
+
+/* ==================== 动画 ==================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* ==================== 实用工具类 ==================== */
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-ellipsis-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }

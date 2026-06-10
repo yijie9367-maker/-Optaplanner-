@@ -1,0 +1,99 @@
+/** 发布帖子页面 **/
+.page-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f7f9fc;
+}
+
+/* 顶部栏 */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 96rpx;
+  padding: 0 24rpx;
+  background: #4A90D9;
+  flex-shrink: 0;
+}
+.top-close {
+  width: 56rpx; height: 56rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36rpx; color: #fff;
+  border-radius: 50%;
+}
+.top-close:active { background: rgba(255,255,255,0.2); }
+.top-title {
+  font-size: 34rpx; font-weight: 700; color: #fff;
+}
+.top-placeholder { width: 56rpx; }
+
+/* 表单卡片 */
+.form-card {
+  margin: 20rpx 16rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(74,144,217,0.07);
+  border-left: 6rpx solid #4A90D9;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.field-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  margin-bottom: 24rpx;
+}
+.field-wrap:last-child { flex: 1; margin-bottom: 0; }
+
+.field-label {
+  font-size: 24rpx; font-weight: 600; color: #999;
+  padding-left: 4rpx;
+}
+
+.field-input {
+  width: 100%; height: 80rpx;
+  background: #f2f4f7; border-radius: 14rpx;
+  padding: 0 20rpx; font-size: 30rpx; color: #333;
+  box-sizing: border-box;
+}
+.title-input {
+  font-weight: 700;
+}
+
+.field-textarea {
+  width: 100%; flex: 1;
+  background: #f2f4f7; border-radius: 14rpx;
+  padding: 20rpx; font-size: 28rpx; color: #333;
+  box-sizing: border-box; min-height: 300rpx;
+}
+
+/* 底部发布栏 */
+.bottom-bar {
+  display: flex; gap: 20rpx;
+  padding: 16rpx 16rpx;
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  background: #fff;
+  border-top: 1rpx solid #e8ecf1;
+  flex-shrink: 0;
+}
+.cancel-btn {
+  display: flex; align-items: center; justify-content: center;
+  flex: 1; height: 88rpx;
+  background: #f2f4f7; color: #666;
+  border-radius: 20rpx; font-size: 30rpx; font-weight: 700;
+  border: none; box-sizing: border-box; padding: 0;
+}
+.cancel-btn:active { opacity: 0.8; }
+.publish-btn {
+  display: flex; align-items: center; justify-content: center;
+  flex: 1; height: 88rpx;
+  background: #4A90D9; color: #fff;
+  border-radius: 20rpx; font-size: 30rpx; font-weight: 700;
+  border: none; box-sizing: border-box; padding: 0;
+  box-shadow: 0 4rpx 16rpx rgba(74,144,217,0.3);
+}
+.publish-btn:active { opacity: 0.85; }

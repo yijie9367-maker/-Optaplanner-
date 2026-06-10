@@ -1,0 +1,30 @@
+server:
+  port: ${SERVER_PORT:8084}
+
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/aischedule?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:123456}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    show-sql: ${JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+app:
+  jwt:
+    secret: ${APP_JWT_SECRET:AISCHEDULE_JWT_SECRET_KEY_2026_WJ_PROJECT_SECURE_32}
+    expiration-minutes: ${APP_JWT_EXPIRATION_MINUTES:720}
+
+# 阿里云百炼 AI 配置（可选，不配则使用模拟回复）
+appflow:
+  chat:
+    app-id: ""     # 百炼应用 App ID
+    api-key: ""    # 百炼 API Key

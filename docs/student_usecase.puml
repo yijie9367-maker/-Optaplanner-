@@ -1,0 +1,122 @@
+@startuml 学生用例图
+skinparam packageStyle rectangle
+skinparam handwritten false
+skinparam DefaultFontName "SimHei"
+skinparam DefaultFontSize 12
+
+' ========== 标题 ==========
+title 图2-1 学生用例图
+
+' ========== 参与者 ==========
+left to right direction
+actor "学生" as Student <<学生>>
+
+' ========== 系统边界 ==========
+rectangle "基于AI的智能排课系统" as System {
+
+  ' ===== 账号管理模块 =====
+  package "账号管理" as Account {
+    usecase "登录" as UC_Login
+    usecase "修改密码" as UC_ChangePwd
+    usecase "退出登录" as UC_Logout
+  }
+
+  ' ===== 课表查询模块 =====
+  package "课表查询" as ScheduleMod {
+    usecase "查看班级课表" as UC_Schedule
+    usecase "按周次筛选课表" as UC_WeekFilter
+  }
+
+  ' ===== 课程信息模块 =====
+  package "课程信息" as CourseMod {
+    usecase "查看课程列表" as UC_Courses
+    usecase "查看课程详情" as UC_CourseDetail
+  }
+
+  ' ===== 班级信息模块 =====
+  package "班级信息" as ClassMod {
+    usecase "查看同学信息" as UC_Classmates
+    usecase "查看班级统计" as UC_ClassStats
+  }
+
+  ' ===== 考试管理模块 =====
+  package "考试查询" as ExamMod {
+    usecase "查看考试安排" as UC_Exams
+    usecase "查看成绩" as UC_Grades
+  }
+
+  ' ===== 消息通知模块 =====
+  package "消息通知" as MessageMod {
+    usecase "查看通知公告" as UC_Messages
+    usecase "查看热门消息" as UC_HotMessages
+    usecase "点赞消息" as UC_LikeMsg
+  }
+
+  ' ===== 论坛互动模块 =====
+  package "校园论坛" as ForumMod {
+    usecase "浏览帖子" as UC_Browse
+    usecase "搜索帖子" as UC_Search
+    usecase "发帖" as UC_Post
+    usecase "评论帖子" as UC_Comment
+    usecase "点赞/踩帖子" as UC_Vote
+  }
+
+  ' ===== 系统内部用例 =====
+  usecase "权限验证" as UC_Auth
+  usecase "禁言校验" as UC_MuteCheck
+}
+
+' ========== 关联关系：学生与各模块 ==========
+Student --> UC_Login
+Student --> UC_ChangePwd
+Student --> UC_Logout
+Student --> UC_Schedule
+Student --> UC_Courses
+Student --> UC_Classmates
+Student --> UC_Exams
+Student --> UC_Grades
+Student --> UC_Messages
+Student --> UC_Browse
+Student --> UC_Post
+
+' ========== 包含关系 <<include>> ==========
+' 登录必须进行权限验证
+UC_Login ..> UC_Auth : <<include>>
+UC_ChangePwd ..> UC_Auth : <<include>>
+
+' 操作帖子需要先浏览
+UC_Post ..> UC_Browse : <<include>>
+UC_Comment ..> UC_Browse : <<include>>
+UC_Vote ..> UC_Browse : <<include>>
+
+' 查看课程详情需要先查看课程列表
+UC_CourseDetail ..> UC_Courses : <<include>>
+
+' 发帖和评论需要禁言校验
+UC_Post ..> UC_MuteCheck : <<include>>
+UC_Comment ..> UC_MuteCheck : <<include>>
+
+' 按周次筛选课表需要先查看课表
+UC_WeekFilter ..> UC_Schedule : <<include>>
+
+' 搜索帖子需要先浏览
+UC_Search ..> UC_Browse : <<include>>
+
+' 查看成绩和考试安排需权限验证
+UC_Exams ..> UC_Auth : <<include>>
+UC_Grades ..> UC_Auth : <<include>>
+
+' 查看班级统计需要查看同学
+UC_ClassStats ..> UC_Classmates : <<include>>
+
+' 点赞消息需要先查看消息
+UC_LikeMsg ..> UC_Messages : <<include>>
+
+' ========== 扩展关系 <<extend>> ==========
+' 回复评论扩展自评论帖子
+UC_Comment <.. UC_Comment : <<extend>>\n(回复评论)
+
+' 查看热门消息扩展自查看通知
+UC_HotMessages ..> UC_Messages : <<extend>>
+
+@enduml

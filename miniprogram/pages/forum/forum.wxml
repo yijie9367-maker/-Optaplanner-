@@ -1,0 +1,81 @@
+<!-- 论坛页面 -->
+<view class="page-container">
+  
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <text class="search-icon">🔍</text>
+      <input 
+        class="search-input" 
+        placeholder="搜索帖子..." 
+        value="{{keyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearch"
+      />
+      <text class="search-clear" wx:if="{{keyword}}" bindtap="clearSearch">✕</text>
+    </view>
+  </view>
+
+  <!-- 排序切换 -->
+  <view class="sort-bar">
+    <view class="sort-item {{sort === 'newest' ? 'active' : ''}}" bindtap="switchSort" data-sort="newest">最新</view>
+    <view class="sort-item {{sort === 'hot' ? 'active' : ''}}" bindtap="switchSort" data-sort="hot">最热</view>
+  </view>
+
+  <!-- 帖子列表 -->
+  <view class="post-list" wx:if="{{posts.length > 0}}">
+    <view 
+      class="post-card card" 
+      wx:for="{{posts}}" 
+      wx:key="id"
+      bindtap="goDetail"
+      data-id="{{item.id}}"
+    >
+      <!-- 帖子头部 -->
+      <view class="post-header">
+        <view class="post-avatar">{{item.authorName[0]}}</view>
+        <view class="post-author-info">
+          <text class="post-author">{{item.authorName}}</text>
+          <text class="post-time">{{item.createdAt}}</text>
+        </view>
+        <view class="post-pin" wx:if="{{item.pinned}}">📌 置顶</view>
+      </view>
+      
+      <!-- 帖子标题 -->
+      <view class="post-title">{{item.title}}</view>
+      
+      <!-- 帖子摘要 -->
+      <view class="post-excerpt">{{item.content}}</view>
+      
+      <!-- 帖子底部操作栏 -->
+      <view class="post-actions">
+        <view class="action-item" catchtap="toggleLike" data-index="{{index}}">
+          <text class="action-icon">{{item.liked ? '❤️' : '🤍'}}</text>
+          <text class="action-count">{{item.likeCount || 0}}</text>
+        </view>
+        <view class="action-item" catchtap="goDetail" data-id="{{item.id}}">
+          <text class="action-icon">💬</text>
+          <text class="action-count">{{item.commentCount || 0}}</text>
+        </view>
+        <view class="action-time">{{item.createdAt}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{posts.length === 0 && !loading}}">
+    <text class="empty-icon">📝</text>
+    <text class="empty-text">暂无帖子，快来发布第一条吧~</text>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 发帖 FAB 按钮（仅登录可见） -->
+  <view class="fab" wx:if="{{isLoggedIn}}" bindtap="goCreate">
+    <text class="fab-icon">+</text>
+  </view>
+
+</view>

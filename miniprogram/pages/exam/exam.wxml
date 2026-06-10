@@ -1,0 +1,88 @@
+<!-- 考试安排页面 -->
+<view class="page-container">
+
+  <!-- 今日安排 -->
+  <view class="section" wx:if="{{todayExams.length > 0}}">
+    <view class="section-header">
+      <view class="section-dot dot-today"></view>
+      <text class="section-title">今日安排</text>
+      <text class="section-date">{{todayDate}}</text>
+    </view>
+    <view class="exam-card card card-today" wx:for="{{todayExams}}" wx:key="id">
+      <view class="exam-top">
+        <view class="exam-info">
+          <text class="exam-course">{{item.courseName}}</text>
+          <text class="exam-location">📍 {{item.location}}</text>
+        </view>
+        <view class="exam-time">
+          <text class="exam-time-text">{{item.startTime}} ~ {{item.endTime}}</text>
+          <text class="exam-status status-active">进行中</text>
+        </view>
+      </view>
+      <view class="exam-divider"></view>
+      <view class="exam-bottom">
+        <text class="exam-teacher">👨‍🏫 {{item.teacherName}}</text>
+        <text class="exam-class">👥 {{item.className}}</text>
+        <text class="exam-tag">期末考试</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 未来安排 -->
+  <view class="section" wx:if="{{upcomingExams.length > 0}}">
+    <view class="section-header">
+      <view class="section-dot dot-upcoming"></view>
+      <text class="section-title">未来安排</text>
+    </view>
+    <view wx:for="{{upcomingGrouped}}" wx:for-item="group" wx:key="date">
+      <view class="date-head" wx:if="{{group.date}}">
+        <text class="date-text">{{group.date}}</text>
+      </view>
+      <view class="exam-card card" wx:for="{{group.exams}}" wx:for-item="item" wx:key="id">
+        <view class="exam-top">
+          <view class="exam-info">
+            <text class="exam-course">{{item.courseName}}</text>
+            <text class="exam-location">📍 {{item.location}}</text>
+          </view>
+          <view class="exam-time">
+            <text class="exam-time-text">{{item.startTime}} ~ {{item.endTime}}</text>
+            <text class="exam-countdown">{{item.daysLeft}}天后</text>
+          </view>
+        </view>
+        <view class="exam-divider"></view>
+        <view class="exam-bottom">
+          <text class="exam-teacher">👨‍🏫 {{item.teacherName}}</text>
+          <text class="exam-class">👥 {{item.className}}</text>
+          <text class="exam-tag" wx:if="{{item.examType}}">{{item.examType}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 已结束 -->
+  <view class="section section-past" wx:if="{{pastExams.length > 0}}">
+    <view class="section-header">
+      <view class="section-dot dot-past"></view>
+      <text class="section-title">已结束</text>
+    </view>
+    <view class="exam-card card card-past" wx:for="{{pastExams}}" wx:key="id">
+      <view class="exam-top">
+        <view class="exam-info">
+          <text class="exam-course">{{item.courseName}}</text>
+          <text class="exam-location">📍 {{item.location}}</text>
+        </view>
+        <view class="exam-time">
+          <text class="exam-time-text">{{item.startTime}} ~ {{item.endTime}}</text>
+          <text class="exam-status status-past">已结束</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{allExams.length === 0}}">
+    <text class="empty-icon">📋</text>
+    <text class="empty-text">暂无考试安排</text>
+  </view>
+
+</view>
